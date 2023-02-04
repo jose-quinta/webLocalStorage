@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="./CSS/style.css">
+    <!-- bootstrap css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg bg-dark">
+            <div class="container-lg d-flex justify-content-evenly">
+                <a class="navbar-brand btn text-white" href="./index.html">webLocalStorage</a>
+                <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse d-md-flex justify-content-between" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item btn">
+                            <a href="../index.html" class="nav-link text-white">Home</a>
+                        </li>
+                        <li class="nav-item btn dropdown" id="manager-content">
+                            <a href="#" class="nav-link text-white dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Manager Content
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="../Views/user.html">Users</a></li>
+                                <li><a class="dropdown-item" href="../Views/post.html">Posts</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item btn">
+                            <a href="../Views/post.html" class="nav-link text-white">Posts</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav identity"> </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container-lg mb-3">
+        <h1 class="display-6 text-center mt-3">Web Local Storage</h1>
+        <section class="container border-top border-dark py-4 px-3">
+            <p class="text-center">
+                <span class="fw-bolder">Que es web local storage</span> - es una funcion que nos permite almacenar datos de manera local en el navegador
+            </p>
+        </section>
+
+        <section class="container overflow-hidden mb-5">
+            <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3 form-group" id="posts-container"></div>
+        </section>
+
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-3" id="staticBackdropLabel"></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="container px-5"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- para probar lo de leer archivos .txt -->
+        <section class="container col-md-10 justify-content-center m-auto mb-5">
+            <h3 class="display-6 text-center mb-3">Mostrar contenido</h3>
+            <div class="row">
+                <input type="file" name="file-input" id="file-input" class="border border-dark rounded bg-dark text-white p-0">
+                <!-- <textarea name="mostrar-contenido" id="mostrar-contenido" class="my-3" placeholder="Drag and drop the .txt file here..." cols="30" rows="10"></textarea> -->
+                <div class="border border-dark mb-3" id="mostrar-contenido" style="height: 246px; overflow-y: scroll;">
+                    <h3 class="display-6 text-center mt-5 m-auto">Drag and drop the .txt file here...</h3>
+                </div>
+            </div>
+            <script type="text/javascript" language="javascript">
+                // fuente https://es.stackoverflow.com/questions/54734/c%C3%B3mo-leer-un-archivo-txt-desde-javascript
+
+                // ======================== Read .txt ====================================================
+                let area = document.querySelector('#mostrar-contenido');
+                let fuck;
+
+                const show_content = (content) => {
+                    area.textContent = '';
+                    let lines = content.split(/\n/);
+                    area['nodeName'] === 'DIV'
+                        ? lines.forEach(line => {
+                            line = line.replaceAll(' ', '&nbsp;');
+                            area.innerHTML +=  line + '<br/>';
+                        })
+                        : lines.forEach(line => {
+                            area.textContent += line + '\n';
+                        });
+                };
+
+                const read_file = (e) => {
+                    e.preventDefault();
+                    console.log(fuck = e);
+                    let file = e.target['type'] === 'file' ? e.target.files[0] : e.dataTransfer.files[0];
+
+                    if (!file || file.type !== 'text/plain') return;
+
+                    let reader = new FileReader();
+                    // reader.onload = (e) => show_content(e.target.result);
+                    reader.onloadend = () => show_content(reader.result);
+                    reader.readAsText(file, 'ISO-8859-1');
+                };
+
+                document.querySelector('#file-input').addEventListener('change', (e) => { read_file(e) }, false);
+
+                area.addEventListener('dragover', (e) => { e.preventDefault() }, false);
+                area.addEventListener('drop', (e) => { read_file(e) }, false);
+
+                // ======================== Read .pdf ====================================================
+
+            </script>
+        </section>
+
+        <!-- para probar lo de como generar archivos .txt -->
+        <section class="container col-md-10 text-center m-auto mb-5">
+            <h3 class="display-6 mb-3">Generar archivo txt</h3>
+            <div class="row">
+                <input type="text" name="fileName" id="fileName" placeholder="download">
+                <textarea name="content" id="content" placeholder="Content..." cols="30" rows="10"></textarea>
+                <button class="btn btn-dark" id="download">Generar txt</button>
+            </div>
+            <script type="text/javascript" language="javascript">
+                // fuente https://stackoverflow.com/questions/5403912/create-a-text-file-using-javascript
+
+                // Primera prueba => no me funciona
+                /* const generateTxt = ( data ) => {
+                    let fso = new ActiveXObject('Scripting.FileSystemObject');
+                    let file = fso.CreateTextFile('C:\\Test_File.txt', true);
+                    file.WriteLine(data.join('\t'));
+                    file.Close();
+                };
+
+                document.querySelector('#generate-txt').addEventListener('click', () => {
+                    let posts = getArrayItems('posts');
+                    generateTxt(posts[0]);
+                }, false); */
+
+                // Segunda prueba
+                // DOM utility functions:
+                const el = (sel, par) => (par || document).querySelector(sel);
+                const elNew = (tag, prop) => Object.assign(document.createElement(tag), prop);
+
+                // Create file and download it:
+                const createAndDowload = (content, download = "download.txt", type = "text/plain") => {
+                    const file = new Blob([content], { type });
+                    const href = URL.createObjectURL(file);
+                    const elAnchor = elNew("a", { href, download });
+                    el("body").append(elAnchor);
+                    elAnchor.click();
+                    elAnchor.remove();
+                    URL.revokeObjectURL(href);
+                };
+
+                // Usage example:
+                el("#download").addEventListener('click', () => {
+                    const text = el("#content").value;
+                    const name = el("#fileName").value;
+                    createAndDowload(text, name, "text/plain");
+                }, false);
+            </script>
+        </section>
+
+    </main>
+
+    <script type="text/javascript" language="javascript" src="./JS/app.js"></script>
+    <script type="text/javascript" language="javascript" src="./JS/index.js"></script>
+
+    <!-- bootstrap js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+</html>
